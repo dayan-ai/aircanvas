@@ -49,3 +49,11 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# Database files
+*.db
+*.db-journal
+
+# IDEs and Editors
+.vscode/
+.idea/
