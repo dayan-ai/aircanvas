@@ -305,8 +305,11 @@ export default function AirCanvas() {
     setIsLoading(true)
     
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Camera not supported in this browser. If you opened this link from Instagram or LinkedIn, please click the menu and select "Open in System Browser" (Chrome/Safari).')
+      }
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' }
+        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }
       })
       
       videoRef.current.srcObject = stream
@@ -386,9 +389,10 @@ export default function AirCanvas() {
       }
       
       setIsStreaming(true)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Camera error:', error)
-      alert('Failed to access camera. Please grant camera permissions.')
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      alert(errorMessage.includes('Camera not supported') ? errorMessage : 'Failed to access camera. Please grant camera permissions and ensure you are using Chrome or Safari.')
     } finally {
       setIsLoading(false)
     }
